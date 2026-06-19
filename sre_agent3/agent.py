@@ -32,7 +32,7 @@ def gcp_auth_headers(context) -> dict[str, str]:
     }
     
     if project_id:
-        headers["x-goog-user-project"] = project_id
+        headers["X-Goog-User-Project"] = project_id
         
     return headers
 
