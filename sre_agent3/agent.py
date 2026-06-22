@@ -1,6 +1,7 @@
 import google.auth
 from google.auth.transport.requests import Request
 from google.adk import Agent
+from google.adk.apps.app import App, EventsCompactionConfig
 from google.adk.tools.mcp_tool import McpToolset
 from google.adk.tools.mcp_tool.mcp_session_manager import StreamableHTTPConnectionParams
 
@@ -84,3 +85,15 @@ When answering user queries:
 """,
     tools=[cloud_logging_tools, dev_knowledge_tools]
 )
+
+app = App(
+    name='sre_agent3',
+    root_agent=root_agent,
+    events_compaction_config=EventsCompactionConfig(
+        compaction_interval=10,
+        overlap_size=2,
+        token_threshold=700000,
+        event_retention_size=2
+    )
+)
+
