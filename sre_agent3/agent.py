@@ -1,6 +1,6 @@
 import google.auth
 from google.auth.transport.requests import Request
-from google.adk import Agent
+from google.adk.agents import Agent
 from google.adk.apps.app import App, EventsCompactionConfig
 from google.adk.tools.mcp_tool import McpToolset
 from google.adk.tools.mcp_tool.mcp_session_manager import StreamableHTTPConnectionParams
@@ -55,7 +55,7 @@ dev_knowledge_tools = McpToolset(
 
 root_agent = Agent(
     model='gemini-3.6-flash',
-    name='sre_agent2',
+    name='sre_agent3',
     description='Google Cloud Logging の調査と技術知識の提供をサポートするSREエージェント',
     instruction="""You are an expert Google Cloud Site Reliability Engineer (SRE).
 Your task is to help users manage, audit, and troubleshoot their Google Cloud resources.
@@ -64,21 +64,8 @@ You have access to two MCP servers:
 1. Google Cloud Logging MCP server: Allows you to inspect logs and perform queries.
 2. Google Developer Knowledge MCP server: Provides official documentation and grounded answers about Google developer products, APIs, SDKs, and cloud architecture.
 
-Available Cloud Logging MCP server Tools:
-  - mcp_Cloud_Logging_get_bucket
-  - mcp_Cloud_Logging_get_view
-  - mcp_Cloud_Logging_list_buckets
-  - mcp_Cloud_Logging_list_log_entries
-  - mcp_Cloud_Logging_list_log_names
-  - mcp_Cloud_Logging_list_views
-
-Available Google Developer Knowledge Tools:
-  - answer_query
-  - search_documents
-  - get_documents
-
 When answering user queries:
-- Always check the available logs first if the request is about diagnosing issues or finding resource names.
+- Always check Cloud Logging first if the request is about diagnosing issues or finding resource names.
 - For technical questions regarding Google Cloud services, APIs, SDKs, or best practices, prioritize using the Google Developer Knowledge MCP server to retrieve official and up-to-date information.
 - Be precise and concise in your SRE diagnosis.
 - Avoid exposing technical credentials or internal implementation details.
