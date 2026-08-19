@@ -54,7 +54,7 @@ dev_knowledge_tools = McpToolset(
 
 
 root_agent = Agent(
-    model='gemini-3.6-flash',
+    model='gemini-3.7-flash',
     name='sre_agent3',
     description='Google Cloud Logging の調査と技術知識の提供をサポートするSREエージェント',
     instruction="""You are an expert Google Cloud Site Reliability Engineer (SRE).

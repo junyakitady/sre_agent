@@ -1,4 +1,3 @@
 google-cloud-aiplatform[agent_engines]
-google-adk[otel-gcp]
+google-adk[mcp,otel-gcp]
 fsspec[gcs]
-mcp
