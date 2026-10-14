@@ -1,22 +1,26 @@
-# GCP SRE Agent (sre_agent3)
+# GCP SRE Agent (sre_agent)
 
 このプロジェクトは、Gemini Enterprise Agent Runtime (旧 Vertex AI Agent Engine / Reasoning Engine) 上に構築およびデプロイ可能な、Google Cloud のインフラ監視・トラブルシューティング支援のための SRE AI エージェントです。
 
 ## 主な機能
 
 * **GCP ログ調査**: [Google Cloud Logging MCP](https://logging.googleapis.com) と統合し、特定の GCP プロジェクトからエラーログや警告ログを高度にフィルタ・検索できます。
-* **技術情報の提供**: [Google Developer Knowledge MCP](https://developerknowledge.googleapis.com) と統合し、Google Cloud や関連開発者製品 offfical ドキュメント、ベストプラクティスに基づいた正確な技術情報を提供します。
+* **技術情報の提供**: [Google Developer Knowledge MCP](https://developerknowledge.googleapis.com) と統合し、Google Cloud や関連開発者製品の公式ドキュメント、ベストプラクティスに基づいた正確な技術情報を提供します。
 * **高度な認証制御**: Application Default Credentials (ADC) を用いて認証トークンを動的に取得・キャッシュし、有効期限が切れた場合のみ自動でリフレッシュします。また、必要な `X-Goog-User-Project` ヘッダーを適切にインジェクトします。
+* **リトライ制御とエラー回復**: `Gemini` モデルの `HttpRetryOptions` による LLM API リトライおよび ADK の `ReflectAndRetryToolPlugin` によるツール実行失敗時の自動再試行を備えています。
+* **イベント履歴の自動圧縮 (Compaction)**: `EventsCompactionConfig` により、長期セッションや大量ログ調査時のコンテキストウィンドウ肥大化を自動で要約・圧縮します。
 
 ## プロジェクト構成
 
 ```text
-sre_agent3/
+sre_agent/
 ├── README.md                          # 本ドキュメント
 ├── requirements.txt                   # プロジェクト共通の依存関係
-└── sre_agent3/
+└── sre_agent/
+    ├── __init__.py                    # パッケージ初期化
     ├── agent.py                       # エージェント定義および認証ロジック
     ├── SA_agent_engine_config.json    # サービスアカウント認証用のデプロイ構成
+    ├── ID_agent_engine_config.json    # Agent Identity 用のデプロイ構成
     ├── .env                           # ローカル開発用の環境変数設定
     └── requirements.txt               # ランタイム用の依存関係
 ```
@@ -59,8 +63,8 @@ pip install -r requirements.txt
 
 ### 2. Gemini Enterprise Agent Runtime へのデプロイ
 
-以下の `adk deploy` コマンドを実行して、サービスアカウント構成（`sre_agent3/SA_agent_engine_config.json`）を用いたエージェントのデプロイを行います。
+以下の `adk deploy` コマンドを実行して、サービスアカウント構成（`sre_agent/SA_agent_engine_config.json`）を用いたエージェントのデプロイを行います。
 
 ```bash
-adk deploy agent_engine --project=llm20260121 --region=us-central1 --display_name=SRE_Agent3_v4 --agent_engine_config_file=$(pwd)/sre_agent3/SA_agent_engine_config.json sre_agent3
+adk deploy agent_engine --project=llm20260121 --region=us-central1 --display_name=SRE_Agent --agent_engine_config_file=$(pwd)/sre_agent/SA_agent_engine_config.json sre_agent
 ```
