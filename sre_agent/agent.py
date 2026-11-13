@@ -51,7 +51,7 @@ dev_knowledge_tools = McpToolset(
 
 root_agent = Agent(
     model=Gemini(
-        model='gemini-4-argon',
+        model='gemini-4-hydrogen',
         retry_options=types.HttpRetryOptions(initial_delay=1, attempts=3),
     ),
     name='sre_agent',
@@ -102,7 +102,7 @@ app = App(
         token_threshold=200000,
         event_retention_size=2,
         summarizer=LlmEventSummarizer(
-            llm=Gemini(model='gemini-3.8-flash')
+            llm=Gemini(model='gemini-4-hydrogen')
         ),
     )
 )

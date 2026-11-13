@@ -8,8 +8,8 @@
 * **技術情報の提供と根拠ある分析**: [Google Developer Knowledge MCP](https://developerknowledge.googleapis.com) と統合し、Google Cloud や関連開発者製品の公式ドキュメント、ベストプラクティスに基づいた正確な技術情報を提供し、情報源の公式 URL を引用します。
 * **止血優先とリスク評価付き構造化報告**: Google SRE ベストプラクティスに基づき、コマンド提示時にはリスク評価ブロック（`⚪ NONE | 🟢 LOW | 🟡 MEDIUM | 🔴 HIGH`）を付与し、事象サマリー・根拠・根本原因仮説（確信度付き）・推奨アクション（緩和策/恒久対策）の4部構成で報告します。
 * **高度な認証制御**: Application Default Credentials (ADC) を用いて認証トークンを動的に取得・キャッシュし、有効期限が切れた場合のみ自動でリフレッシュします。また、必要な `X-Goog-User-Project` ヘッダーを適切にインジェクトします。
-* **リトライ制御とエラー回復**: `Gemini` モデルの `HttpRetryOptions` による LLM API リトライおよび ADK の `ReflectAndRetryToolPlugin` によるツール実行失敗時の自動再試行を備えています。
-* **イベント履歴の自動圧縮 (Compaction)**: `EventsCompactionConfig` により、長期セッションや大量ログ調査時のコンテキストウィンドウ肥大化を自動で要約・圧縮します（トークンベース圧縮: `token_threshold=200000`, `event_retention_size=2`、要約モデル: `LlmEventSummarizer` で `gemini-3.8-flash` を使用）。
+* **リトライ制御とエラー回復**: `Gemini` モデル（`gemini-4-hydrogen`）の `HttpRetryOptions` による LLM API リトライおよび ADK の `ReflectAndRetryToolPlugin` によるツール実行失敗時の自動再試行を備えています。
+* **イベント履歴の自動圧縮 (Compaction)**: `EventsCompactionConfig` により、長期セッションや大量ログ調査時のコンテキストウィンドウ肥大化を自動で要約・圧縮します（トークンベース圧縮: `token_threshold=200000`, `event_retention_size=2`、要約モデル: `LlmEventSummarizer` で `gemini-4-hydrogen` を使用）。
 * **テレメトリとトレース制御**: OpenTelemetry による Cloud Trace 連携（`GOOGLE_CLOUD_AGENT_ENGINE_ENABLE_TELEMETRY='true'`）を有効化しつつ、大容量プロンプトによる Cloud Logging 書き出し上限超過を防ぐため、プロンプト・レスポンス本文の記録を無効化（`OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT='NO_CONTENT'`, `ADK_CAPTURE_MESSAGE_CONTENT_IN_SPANS='false'`）しています。
 
 ## プロジェクト構成
